@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+Copyright Wayne Marsh 2010 (http://marshgames.com/)
+
+This file is part of SWFToXML.
+
+SWFToXML is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SWFToXML is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with SWFToXML.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/halo"
+					   initialize="init()">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			
+			private var _swfLoader:Loader;
+			private var _loadRef:FileReference;
+			
+			private function init():void
+			{
+				_swfLoader = new Loader;
+				_swfLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, swfLoaded);
+				
+				_loadRef = new FileReference;
+				_loadRef.addEventListener(Event.SELECT, fileOpenSelect);
+				_loadRef.addEventListener(Event.COMPLETE, rawFileLoaded);
+				
+				// Turn off volume so we don't hear annoying clips playing
+				flash.media.SoundMixer.soundTransform = new SoundTransform(0);
+			}
+			
+			private function swfLoaded(e:Event):void
+			{
+				var m:DisplayObjectContainer = _swfLoader.content as DisplayObjectContainer;
+				if (!m) Alert.show("Loaded file must be an AVM2 (Flash 9+) SWF", "File error");
+				else
+				{
+					var xml:XML = GenerateDisplayListXML(m);
+					xmlOutput.text = xml.toXMLString();
+				}
+			}
+			
+			private function rawFileLoaded(e:Event):void
+			{
+				var loaderContext:LoaderContext = new LoaderContext;
+				loaderContext.allowLoadBytesCodeExecution = true;
+				_swfLoader.loadBytes(_loadRef.data, loaderContext);
+			}
+			
+			private function fileOpenSelect(e:Event):void
+			{
+				_loadRef.load();
+			}
+			
+			private function openClick():void
+			{
+				_loadRef.browse([new FileFilter("SWF movies", ".swf")]);
+			}
+			
+			private function saveClick():void
+			{
+				var xmlData:ByteArray = new ByteArray;
+				xmlData.writeUTFBytes("<?xml version=\"1.0\" encoding='UTF-8'?>");
+				xmlData.writeUTFBytes(xmlOutput.text);				
+				
+				var saveRef:FileReference = new FileReference;
+				saveRef.save(xmlData);
+			}
+		]]>
+	</fx:Script>
+	
+	<s:Button x="10" y="10" label="Open SWF file and generate XML" click="openClick()"/>
+	<s:Button x="219" y="10" label="Save generated XML" enabled="{xmlOutput.text.length != 0}" click="saveClick()"/>
+	<s:TextArea id="xmlOutput" editable="false" right="10" left="10" bottom="10" top="39"/>
+	
+</s:WindowedApplication>
