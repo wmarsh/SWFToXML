@@ -60,6 +60,8 @@ function GenerateDisplayObjectXML(d:DisplayObject):XML
 	xml.@name = d.name;
 	xml.@className = getQualifiedClassName(d);
 	xml.@matrix = d.transform.matrix.toString();
+	xml.@x = d.x;
+	xml.@y = d.y;
 	
 	return xml;
 }
