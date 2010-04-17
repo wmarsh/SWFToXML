@@ -19,11 +19,11 @@ package
 {
 	import flash.display.DisplayObjectContainer;
 	
-	function GenerateDisplayListXML(root:DisplayObjectContainer):XML
+	function GenerateDisplayListXML(root:DisplayObjectContainer, recurse:Boolean):XML
 	{
 		var xml:XML = <DisplayList />;
 		
-		xml.DisplayList += ProcessNode(root);
+		xml.DisplayList += ProcessNode(root, recurse);
 		
 		return xml;
 	}
@@ -33,16 +33,16 @@ import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 import flash.utils.getQualifiedClassName;
 
-function ProcessNode(node:DisplayObjectContainer):XML
+function ProcessNode(node:DisplayObjectContainer, recurse:Boolean):XML
 {
 	var xml:XML = GenerateDisplayObjectXML(node);
 	
 	for (var i:int = 0; i < node.numChildren; i++)
 	{
 		var child:DisplayObject = node.getChildAt(i);
-		if (child is DisplayObjectContainer)
+		if (child is DisplayObjectContainer && recurse)
 		{
-			xml.DisplayObject += ProcessNode(DisplayObjectContainer(child));
+			xml.DisplayObject += ProcessNode(DisplayObjectContainer(child), true);
 		}
 		else
 		{

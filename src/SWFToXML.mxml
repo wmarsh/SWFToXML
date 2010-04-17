@@ -52,7 +52,7 @@ along with SWFToXML.  If not, see <http://www.gnu.org/licenses/>.
 				if (!m) Alert.show("Loaded file must be an AVM2 (Flash 9+) SWF", "File error");
 				else
 				{
-					var xml:XML = GenerateDisplayListXML(m);
+					var xml:XML = GenerateDisplayListXML(m, !stageChildrenOnly.selected);
 					xmlOutput.text = xml.toXMLString();
 				}
 			}
@@ -89,5 +89,6 @@ along with SWFToXML.  If not, see <http://www.gnu.org/licenses/>.
 	<s:Button x="10" y="10" label="Open SWF file and generate XML" click="openClick()"/>
 	<s:Button x="219" y="10" label="Save generated XML" enabled="{xmlOutput.text.length != 0}" click="saveClick()"/>
 	<s:TextArea id="xmlOutput" editable="false" right="10" left="10" bottom="10" top="39"/>
+	<s:CheckBox x="360" y="10" label="Stage children only" toolTip="Don't add children of depth > 1, i.e. top 'layer' only" selected="false" id="stageChildrenOnly"/>
 	
 </s:WindowedApplication>
