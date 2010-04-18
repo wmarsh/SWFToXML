@@ -21,9 +21,9 @@ package
 	
 	function GenerateDisplayListXML(root:DisplayObjectContainer, recurse:Boolean):XML
 	{
-		var xml:XML = <DisplayList />;
+		var xml:XML = <array />;
 		
-		xml.DisplayList += ProcessNode(root, recurse);
+		xml.appendChild(ProcessNode(root, recurse));
 		
 		return xml;
 	}
@@ -35,18 +35,22 @@ import flash.utils.getQualifiedClassName;
 
 function ProcessNode(node:DisplayObjectContainer, recurse:Boolean):XML
 {
+	var children:XML = <array />;
+	
 	var xml:XML = GenerateDisplayObjectXML(node);
+	xml.appendChild(<key>children</key>);
+	xml.appendChild(children);
 	
 	for (var i:int = 0; i < node.numChildren; i++)
 	{
 		var child:DisplayObject = node.getChildAt(i);
 		if (child is DisplayObjectContainer && recurse)
 		{
-			xml.DisplayObject += ProcessNode(DisplayObjectContainer(child), true);
+			children.appendChild(ProcessNode(DisplayObjectContainer(child), true));
 		}
 		else
 		{
-			xml.DisplayObject += GenerateDisplayObjectXML(child);
+			children.appendChild(GenerateDisplayObjectXML(child));
 		}
 	}
 	
@@ -55,13 +59,24 @@ function ProcessNode(node:DisplayObjectContainer, recurse:Boolean):XML
 
 function GenerateDisplayObjectXML(d:DisplayObject):XML
 {
-	var xml:XML = <DisplayObject />;
+	var xml:XML = <dict />;
 	
-	xml.@name = d.name;
-	xml.@className = getQualifiedClassName(d);
-	xml.@matrix = d.transform.matrix.toString();
-	xml.@x = d.x;
-	xml.@y = d.y;
+	xml.appendChild(<key>name</key>);
+	xml.appendChild(<string>{d.name}</string>);
+	xml.appendChild(<key>className</key>);
+	xml.appendChild(<string>{getQualifiedClassName(d)}</string>);
+	xml.appendChild(<key>matrix</key>);
+	xml.appendChild(<string>{d.transform.matrix}</string>);
+	xml.appendChild(<key>x</key>);
+	xml.appendChild(<string>{d.x}</string>);
+	xml.appendChild(<key>y</key>);
+	xml.appendChild(<string>{d.y}</string>);
+	
+//	xml.@name = d.name;
+//	xml.@className = getQualifiedClassName(d);
+//	xml.@matrix = d.transform.matrix.toString();
+//	xml.@x = d.x;
+//	xml.@y = d.y;
 	
 	return xml;
 }
