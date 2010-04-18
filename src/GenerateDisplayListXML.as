@@ -71,6 +71,8 @@ function GenerateDisplayObjectXML(d:DisplayObject):XML
 	xml.appendChild(<string>{d.x}</string>);
 	xml.appendChild(<key>y</key>);
 	xml.appendChild(<string>{d.y}</string>);
+	xml.appendChild(<key>rotation</key>);
+	xml.appendChild(<string>{d.rotation}</string>);
 	
 //	xml.@name = d.name;
 //	xml.@className = getQualifiedClassName(d);
