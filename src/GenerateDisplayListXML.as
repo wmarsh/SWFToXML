@@ -63,14 +63,28 @@ function GenerateDisplayObjectXML(d:DisplayObject):XML
 	
 	xml.appendChild(<key>name</key>);
 	xml.appendChild(<string>{d.name}</string>);
+	
 	xml.appendChild(<key>className</key>);
 	xml.appendChild(<string>{getQualifiedClassName(d)}</string>);
-	xml.appendChild(<key>matrix</key>);
-	xml.appendChild(<string>{d.transform.matrix}</string>);
-	xml.appendChild(<key>x</key>);
-	xml.appendChild(<string>{d.x}</string>);
-	xml.appendChild(<key>y</key>);
-	xml.appendChild(<string>{d.y}</string>);
+	
+	xml.appendChild(<key>a</key>);
+	xml.appendChild(<string>{d.transform.matrix.a}</string>);
+	
+	xml.appendChild(<key>b</key>);
+	xml.appendChild(<string>{d.transform.matrix.b}</string>);
+
+	xml.appendChild(<key>c</key>);
+	xml.appendChild(<string>{d.transform.matrix.c}</string>);
+	
+	xml.appendChild(<key>d</key>);
+	xml.appendChild(<string>{d.transform.matrix.d}</string>);
+	
+	xml.appendChild(<key>tx</key>);
+	xml.appendChild(<string>{d.transform.matrix.tx}</string>);
+	
+	xml.appendChild(<key>ty</key>);
+	xml.appendChild(<string>{d.transform.matrix.ty}</string>);
+	
 	xml.appendChild(<key>rotation</key>);
 	xml.appendChild(<string>{d.rotation}</string>);
 	
